@@ -1,0 +1,66 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+variables:
+  artifactfeed: "https://pkgs.dev.azure.com/crowded-co/repro900615/_packaging/repro900615/nuget/v3/index.json"
+  ReproPackage: "FParsec"
+  ReproPackageVersion: "1.1.1-*"
+
+pool:
+  vmImage: "ubuntu-18.04"
+
+steps:
+  - script: | 
+      rm -rf *
+    displayName: remove project
+  - script: |
+      cat >global.json <<EOL
+      {
+        "sdk": {
+          "version": "3.1.100"
+        }
+      }
+      EOL
+    displayName: As old CLI tooling doesn't support 1.1.1-* style versions, force specific sdk
+  - task: NuGetAuthenticate@0
+    inputs:
+      forceReinstallCredentialProvider: true
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      useGlobalJson: true
+  - script: |
+      mkdir -p nugetorg
+      cd nugetorg
+      dotnet --info
+      dotnet new console
+      cat nugetorg.csproj
+      cd ..
+      mkdir -p artifactfeed
+      cd artifactfeed
+      dotnet new console
+      cat artifactfeed.csproj
+      cat >NuGet.config <<EOL
+      <?xml version="1.0" encoding="utf-8"?>
+      <configuration>
+        <packageSources>
+          <clear />
+          <add key="repro" value="$(artifactfeed)" />
+        </packageSources>
+      </configuration>
+      EOL
+      cat NuGet.config
+    displayName: Create repro projects  
+  - script: |
+      cd nugetorg && \
+      dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
+    displayName: Add package from nugetorg
+  - script: |
+      cd artifactfeed && \
+      dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
+    displayName: Add package from artifact feed
