@@ -15,9 +15,6 @@ pool:
   vmImage: "ubuntu-18.04"
 
 steps:
-  - script: | 
-      rm -rf *
-    displayName: remove project
   - script: |
       cat >global.json <<EOL
       {
