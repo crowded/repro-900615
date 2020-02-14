@@ -7,8 +7,9 @@ trigger:
 - master
 
 variables:
-  artifactfeed: "https://pkgs.dev.azure.com/crowded-co/repro900615/_packaging/repro900615/nuget/v3/index.json"
-  ReproPackage: "FParsec"
+  # fill in your own private package feed here that has nuget as an upstream source
+  artifactfeed: "https://pkgs.dev.azure.com/crowded-co/_packaging/crowded-co/nuget/v3/index.json"
+  ReproPackage: "FParsec-Pipes"
   ReproPackageVersion: "1.1.1-*"
 
 pool:
