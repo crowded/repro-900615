@@ -64,6 +64,8 @@ steps:
     env:
         NUGET_ACCESS_TOKEN: $(System.AccessToken)
   - script: |
+      sleep 10m
+  - script: |
       #dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
       cd artifactfeed && \
       cp ../nugetorg/nugetorg.csproj ./artifactfeed.csproj
