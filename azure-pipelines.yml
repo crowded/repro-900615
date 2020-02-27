@@ -57,8 +57,10 @@ steps:
   - script: |
       cd nugetorg && \
       dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
+      dotnet restore --verbosity diag
     displayName: Add package from nugetorg
   - script: |
       cd artifactfeed && \
       dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
+      dotnet restore --verbosity diag
     displayName: Add package from artifact feed
