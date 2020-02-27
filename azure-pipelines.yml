@@ -60,7 +60,8 @@ steps:
       dotnet restore --verbosity diag
     displayName: Add package from nugetorg
   - script: |
-      cd artifactfeed && \
-      dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
+      #cd artifactfeed && \
+      #dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
+      cp ../nugetorg/nugetorg.csproj ./artifactfeed.csproj
       dotnet restore --verbosity diag
     displayName: Add package from artifact feed
