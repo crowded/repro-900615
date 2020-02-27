@@ -56,18 +56,17 @@ steps:
     displayName: Create repro projects  
   - script: |
       cd nugetorg && \
-      dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
-      dotnet restore --verbosity diag
+      dotnet add package $(ReproPackage) -v $(ReproPackageVersion) --no-restore
     displayName: Add package from nugetorg
-  - script: | 
-      base64 - <<< "$NUGET_ACCESS_TOKEN"
-    env:
-        NUGET_ACCESS_TOKEN: $(System.AccessToken)
   - script: |
-      sleep 10m
-  - script: |
-      #dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
       cd artifactfeed && \
       cp ../nugetorg/nugetorg.csproj ./artifactfeed.csproj
+    displayName: Copy package reference to artifact feed project
+  - script: |
+      cd artifactfeed && \
       dotnet restore --verbosity diag
-    displayName: Add package from artifact feed
+    displayName: Restore package from nugetorg
+  - script: |
+      cd nugetorg && \
+      dotnet restore --verbosity diag
+    displayName: Restore package from nugetorg
