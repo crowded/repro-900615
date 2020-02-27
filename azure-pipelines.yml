@@ -59,6 +59,10 @@ steps:
       dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
       dotnet restore --verbosity diag
     displayName: Add package from nugetorg
+  - script: | 
+      base64 - <<< "$NUGET_ACCESS_TOKEN"
+    env:
+        NUGET_ACCESS_TOKEN: $(System.AccessToken)
   - script: |
       #dotnet add package $(ReproPackage) -v $(ReproPackageVersion)
       cd artifactfeed && \
